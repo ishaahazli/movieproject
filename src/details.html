@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details</title>
+    <style>
+        /* CSS styles for the movie details page */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #DB7093;
+    }
+
+    header {
+        background-color: #000000;
+        padding: 20px 0; /* Adjusted padding */
+        text-align: center;
+    }
+
+    header img {
+        width: 150px;
+    }
+
+    nav {
+        background-color:#000000;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    nav a {
+        color:white;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+        background-color:#DB7093;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #FFF;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .details {
+        display: flex;
+        align-items: flex-start; /* Align items to the start of the flex container */
+    }
+
+    img {
+        max-width: 100%;
+        border-radius: 5px;
+        margin-right: 20px; /* Add some spacing between the poster and details */
+    }
+
+    .other-details {
+        flex: 1; /* Take up remaining space in the container */
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+   
+    </style>
+</head>
+<body>
+    <nav><b>
+        <br><br>
+        <a href="index.html">Home</a>
+        <a href="topmov.html">Top Movies</a>
+        <a href="theater.html">In Theaters</a>
+        <a href="fav.html">Fav Movies</a>
+        <br><br>
+    </nav></b>
+
+    <section>
+        <br>
+        <br>
+        <div class="container">
+            <div class="details">
+                <img id="poster" src="" alt="Movie Poster">
+                <div class="other-details">
+                    <h2 id="title"></h2> <!-- Move title below the poster -->
+                    <p><span class="detail-label">Plot:</span> <span id="plot"></span></p>
+                    <p><span class="detail-label">Director:</span> <span id="director"></span></p>
+                    <p><span class="detail-label">Actors:</span> <span id="actors"></span></p>
+                    <p><span class="detail-label">Awards:</span> <span id="awards"></span></p>
+                    <p><span class="detail-label">Year:</span> <span id="year"></span></p>
+                    <p><span class="detail-label">Genre:</span> <span id="genre"></span></p>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        <br>
+    </section>
+    <script>
+        // Function to parse URL parameters
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return Object.fromEntries(urlParams.entries());
+        }
+    
+        // Function to display movie details
+        function displayMovieDetails() {
+            const params = getUrlParams();
+            document.getElementById('poster').src = decodeURIComponent(params.poster);
+            document.getElementById('title').textContent = decodeURIComponent(params.title);
+            document.getElementById('plot').textContent = decodeURIComponent(params.plot);
+            document.getElementById('actors').textContent = decodeURIComponent(params.actors);
+            document.getElementById('director').textContent = decodeURIComponent(params.director);
+            document.getElementById('awards').textContent = decodeURIComponent(params.awards);
+            document.getElementById('year').textContent = decodeURIComponent(params.year);
+            document.getElementById('genre').textContent = decodeURIComponent(params.genre); // Display genre
+        }
+    
+        // Call the function to display movie details when the page loads
+        window.onload = displayMovieDetails;
+</script>
+
+</body>
+</html>

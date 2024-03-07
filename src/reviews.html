@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Reviews</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #DB7093;
+        }
+        #reviewForm {
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        header {
+            background-color: #000000;
+            padding: 20px 0; /* Adjusted padding */
+            text-align: center;
+        }
+        header img {
+            width: 150px;
+        }
+        nav {
+            background-color:#000000;
+            text-align: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color:white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color:#DB7093;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 250px;
+            text-align: center;
+            float: left; /* Added to float the card to the left */
+        }
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        #reviewForm {
+            float: left; /* Added to float the form to the left */
+            margin-left: 20px; /* Added margin to separate the form from the card */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #FFF;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Added overflow to clear floats */
+        }
+        #reviews {
+            clear: both;
+            margin-top: 20px;
+        }
+        #reviewList {
+            border: 1px solid black;
+            border-radius: 2px;
+            padding: 10px;
+            margin-top: 10px;
+            padding-right: 4px;
+            margin-left: 2px; /* Add margin to the left */
+        }
+        #readReviewsButton {
+            background-color: #DB7093;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #readReviewsButton:hover {
+            background-color: #FFA07A; /* Change the color on hover */
+        }
+        #submitReviewButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+            padding-top: 2px;
+        }
+        #submitReviewButton:hover {
+            background-color: #0056b3; /* Change the color on hover */
+        }
+        #deleteReviewButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+    
+            margin-top: 13px;
+            margin-left: 2px;
+        }
+        #deleteReviewButton:hover {
+            background-color: #0056b3; /* Change the color on hover */
+        }
+        #updateReviewButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+
+            margin-top: 13px;
+            margin-left: 2px;
+        }
+        #updateReviewButton:hover {
+            background-color: #0056b3; /* Change the color on hover */
+        }
+        .card .readReviewsButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+        .card .readReviewsButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav><b>
+        <br><br>
+        <a href="index.html">Home</a>
+        <a href="topmov.html" >Top Movies</a>
+        <a href="theater.html">In Theaters</a>
+        <a href="fav.html" >Fav Movies</a>
+        <br><br>
+    </nav></b>
+<section>
+    <br>
+    <br>
+    <div class="container">
+        <div class="movie-grid" id="moviePoster">
+            <!-- Favorite movies grid will be dynamically added here -->
+        </div> 
+        <div id="reviewForm">
+            <h2>Enter Your Review:</h2>
+            <form id="submitReviewForm">
+                <textarea id="reviewText" name="review" rows="4" cols="50"></textarea><br>
+                <button id="submitReviewButton" type="submit">Submit Review</button>
+            </form>
+            <br>
+            <br>
+            <div id="reviews" >
+            <br>
+            <br>
+                <h2>Reviews:</h2>
+                <div id="reviewList" class="review-list"></div>
+                <button id="deleteReviewButton" type="submit">Delete Review</button>
+                <button id="updateReviewButton" type="button">Update Review</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</section>
+
+<script>
+    // Retrieve the movie title from the URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const movieTitle = params.get('movie');
+    
+    // Function to handle page initialization
+    function initializePage() {
+        // Display the movie poster and title in a card
+        const movie = JSON.parse(localStorage.getItem('favorites')).find(fav => fav.Title === movieTitle);
+        if (movie) {
+            const movieGrid = document.querySelector('.movie-grid');
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            const img = document.createElement('img');
+            img.src = movie.Poster;
+            img.alt = movie.Title;
+            card.appendChild(img);
+
+            const title = document.createElement('h3');
+            title.textContent = movie.Title;
+            card.appendChild(title);
+
+            // Button to read reviews
+            const readReviewsButton = document.createElement('button');
+            readReviewsButton.textContent = 'Read Reviews';
+            readReviewsButton.classList.add('readReviewsButton'); // Add this line to add the class
+            readReviewsButton.addEventListener('click', function() {
+                // Display reviews
+                displayReviews();
+            });
+            card.appendChild(readReviewsButton);
+            movieGrid.appendChild(card);
+        }
+
+        // Event listener for review submission
+        document.getElementById('submitReviewForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const reviewText = this.querySelector('#reviewText').value; // Changed here
+            if (reviewText.trim() === '') {
+                alert("Please enter a review before submitting.");
+                return;
+            }
+            // Get reviews for this movie or initialize an empty array
+            let movieReviews = JSON.parse(localStorage.getItem('movieReviews')) || {};
+            // Add the review to the movie's reviews
+            if (!movieReviews[movieTitle]) {
+                movieReviews[movieTitle] = [reviewText];
+            } else {
+                movieReviews[movieTitle].push(reviewText);
+            }
+            // Update local storage
+            localStorage.setItem('movieReviews', JSON.stringify(movieReviews));
+            // Display success message
+            alert("Review submitted successfully!");
+            // Clear the review textarea
+            document.getElementById('reviewText').value = ''; // Changed here
+        });
+
+        // Event listener for updating a review
+        document.getElementById('updateReviewButton').addEventListener('click', function(event) {
+            event.preventDefault();
+            // Get reviews for this movie or initialize an empty array
+            let movieReviews = JSON.parse(localStorage.getItem('movieReviews')) || {};
+            // Check if there are any reviews for this movie
+            if (!movieReviews[movieTitle] || movieReviews[movieTitle].length === 0) {
+                alert("No reviews to update.");
+                return;
+            }
+            // Get the index of the last review
+            const lastIndex = movieReviews[movieTitle].length - 1;
+            // Get the last review
+            const lastReview = movieReviews[movieTitle][lastIndex];
+            // Populate the form with the last review
+            const reviewTextArea = document.getElementById('reviewText');
+            reviewTextArea.value = lastReview;
+            // Enable the textarea for editing
+            reviewTextArea.disabled = false; // Corrected here
+            // Display success message
+            alert("You can now edit the review.");
+        });
+
+        // Event listener for deleting a review
+        document.getElementById('deleteReviewButton').addEventListener('click', function(event) {
+            event.preventDefault();
+            // Get reviews for this movie or initialize an empty array
+            let movieReviews = JSON.parse(localStorage.getItem('movieReviews')) || {};
+            // Check if there are any reviews for this movie
+            if (!movieReviews[movieTitle] || movieReviews[movieTitle].length === 0) {
+                alert("No reviews to delete.");
+                return;
+            }
+            // Remove the last review from the array
+            movieReviews[movieTitle].pop();
+            // Update local storage
+            localStorage.setItem('movieReviews', JSON.stringify(movieReviews));
+            // Re-display reviews
+            displayReviews();
+            // Display success message
+            alert("Successfully deleted!");
+        });
+
+        // Function to display reviews
+        function displayReviews() {
+            const movieReviews = JSON.parse(localStorage.getItem('movieReviews')) || {};
+            const reviewList = document.getElementById('reviewList');
+            reviewList.innerHTML = ''; // Clear previous reviews
+            if (movieReviews[movieTitle]) {
+                // Concatenate reviews into a single string
+                let reviewsHTML = '';
+                movieReviews[movieTitle].forEach(review => {
+                    reviewsHTML += `<p>${review}</p>`;
+                });
+                reviewList.innerHTML = reviewsHTML;
+            } else {
+                reviewList.innerHTML = '<p>No reviews available.</p>';
+            }
+        }
+
+        // Enable the textarea if it contains text
+        const reviewTextArea = document.getElementById('reviewText');
+        if (reviewTextArea.value.trim() !== '') {
+            reviewTextArea.disabled = false;
+        }
+    }
+
+    // Initialize the page when it's loaded
+    document.addEventListener('DOMContentLoaded', initializePage);
+</script>
+
+
+
+</body>
+</html>

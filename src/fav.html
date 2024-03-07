@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Movies</title>
+    <style>
+        /* CSS styles for the Netflix interface */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #DB7093;
+        }
+        header {
+            background-color: #000000;
+            padding: 20px 0; /* Adjusted padding */
+            text-align: center;
+        }
+        header img {
+            width: 150px;
+        }
+        nav {
+            background-color:#000000;
+            text-align: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color:white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color:#DB7093;
+        }
+        h1 {
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: bold;
+            font-size: 95;
+        }
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-gap: 20px;
+            padding: 20px; /* Added padding to align with other sections */
+            margin-bottom: 40px;
+        }
+        .movie-card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 5px;
+            position: relative; /* Added relative position */
+            border-radius: 5px 5px 5px 5px;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+        .movie-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px 5px 0 0;
+        }
+        .movie-title {
+            font-size: 1.2em;
+            padding: 10px;
+            margin: 0;
+            text-align: center; /* Added to center align the text */
+            font-weight: bold; /* Add bold text */
+            
+        }
+        .update-button, .read-reviews-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+            margin-right: 5px;
+            margin-bottom: 7px;
+            margin-left: 5px;
+        }
+        .update-button:hover, .read-reviews-button:hover {
+            background-color: #0056b3;
+        }
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+        .delete-button:hover {
+            background-color: #cc0000;
+        }
+        
+    </style>
+</head>
+<body>
+    <nav><b>
+        <br><br>
+        <a href="index.html">Home</a>
+        <a href="topmov.html" >Top Movies</a>
+        <a href="theater.html">In Theaters</a>
+        <a href="#" style="color: #DB7093;">Fav Movies</a>
+        <br><br>
+    </nav></b>
+    <center><h1>Favorite Movies</h1></center>
+    <div class="movie-grid" id="favoritesGrid">
+        <!-- Favorite movies grid will be dynamically added here -->
+    </div>
+    <br>
+    <script>
+        // Retrieve favorite movies from local storage and display them
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const favoritesGrid = document.getElementById('favoritesGrid');
+        
+        favorites.forEach(movie => {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('movie-card');
+
+            const img = document.createElement('img');
+            img.classList.add('movie-image');
+            img.src = movie.Poster;
+            img.alt = movie.Title;
+
+            const title = document.createElement('p');
+            title.classList.add('movie-title');
+            title.textContent = movie.Title;
+
+            const updateButton = document.createElement('button');
+            updateButton.classList.add('update-button');
+            updateButton.textContent = 'Reviews';
+            updateButton.addEventListener('click', function() {
+                // Navigate to reviews.html with the movie title as a URL parameter
+                window.location.href = `reviews.html?movie=${encodeURIComponent(movie.Title)}`;
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+            // Remove the movie from favorites array
+            const index = favorites.findIndex(fav => fav.Title === movie.Title);
+            if (index !== -1) {
+                favorites.splice(index, 1);
+                // Update local storage
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                // Remove the movie card from the grid
+                favoritesGrid.removeChild(movieCard);
+                // Show a popup message indicating successful deletion
+                alert(`"${movie.Title}" has been successfully deleted from favorites.`);
+            }
+        });
+
+            movieCard.appendChild(img);
+            movieCard.appendChild(title);
+            movieCard.appendChild(updateButton);
+            movieCard.appendChild(deleteButton);
+            favoritesGrid.appendChild(movieCard);
+        });
+    </script>
+</body>
+</html>
